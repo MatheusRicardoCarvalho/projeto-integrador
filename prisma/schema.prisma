@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  gender    String    @default("")
+  birthday  DateTime  @default(now())
+  city      String    @default("")
+  photo     String    @default("")
+  phone     String    @default("")
+  password  String
+  userType  String
+  aboutMe   String    @default("Escreva sobre você!")
+  createdAt DateTime  @default(now())
+  likedBy   Like[]    @relation("LikedUser")
+  likes     Like[]    @relation("Liker")
+  tags      UserTag[]
+  chats     Chat[]    @relation("UserChat")
+  messagesSent Message[] @relation("SenderMessages")
+}
+
+model Like {
+  liker        User     @relation("Liker", fields: [likerId], references: [id])
+  likerId      Int
+  likedUser    User     @relation("LikedUser", fields: [likedUserId], references: [id])
+  likedUserId  Int
+  createdAt    DateTime @default(now())
+
+  @@id([likerId, likedUserId], name: "like_unique_constraint")
+}
+
+model Tag {
+  id    Int       @id @default(autoincrement())
+  name  String    @unique
+  type  String
+  users UserTag[]
+}
+
+model UserTag {
+  user   User   @relation(fields: [userId], references: [id])
+  userId Int
+  tag    Tag    @relation(fields: [tagId], references: [id])
+  tagId  Int
+
+  @@id([userId, tagId])
+}
+
+model Chat {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  messages  Message[]
+  users     User[]    @relation("UserChat")
+}
+
+model Message {
+  id        Int       @id @default(autoincrement())
+  content   String
+  createdAt DateTime  @default(now())
+  chat      Chat      @relation(fields: [chatId], references: [id])
+  chatId    Int
+  sender    User      @relation("SenderMessages",fields: [senderId], references: [id])
+  senderId  Int
+}
