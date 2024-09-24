@@ -432,50 +432,56 @@ export class UserController {
 
     async filterUsers(req: CustomRequest, res: Response) {
         try {
-            const { name, email, city, gender, rangeAge, Ilike , userId } = req.body;
+            const { name, email, city, gender, rangeAge, Ilike, userId, tags } = req.body;
             const filters: any = {};
-
+    
             if (name) {
-                filters.name = { contains: name};
+                filters.name = { contains: name };
             }
-
+    
             if (email) {
-                filters.email = { contains: email};
+                filters.email = { contains: email };
             }
-
+    
             if (city) {
-                filters.city = { contains: city};
+                filters.city = { contains: city };
             }
-
+    
             if (gender) {
                 filters.gender = gender;
             }
-
+    
             if (rangeAge) {
                 const currentYear = new Date().getFullYear();
                 const minBirthday = new Date();
                 const maxBirthday = new Date();
                 minBirthday.setFullYear(currentYear - rangeAge.idadeMax);
                 maxBirthday.setFullYear(currentYear - rangeAge.idadeMin);
-
+    
                 filters.birthday = {
                     gte: minBirthday,
                     lte: maxBirthday,
                 };
             }
-
+    
             if (typeof Ilike === 'boolean') {
                 if (Ilike) {
-                    filters.likes = {
+                    filters.likedBy = {
                         some: { likerId: userId },
                     };
-                } else {
-                    filters.likes = {
-                        none: { likerId: userId },
-                    };
-                }
+                } 
             }
-
+    
+            if (tags && tags.length > 0) {
+                filters.tags = {
+                    some: {
+                        tag: {
+                            name: { in: tags },
+                        },
+                    },
+                };
+            }
+    
             const users = await prisma.user.findMany({
                 where: filters,
                 select: {
@@ -499,11 +505,12 @@ export class UserController {
                     },
                 },
             });
-
+    
             return res.status(200).json({ users });
         } catch (err) {
             return res.status(500).json({ error: "Erro ao filtrar usuários: " + err });
         }
     }
+    
     
 }
