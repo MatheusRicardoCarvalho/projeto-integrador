@@ -24,7 +24,7 @@ A arquitetura do projeto é baseada em uma estrutura de **MVC (Model-View-Contro
 
 - **Models**: Representam a estrutura dos dados e a lógica de acesso ao banco de dados. No projeto, os modelos são definidos utilizando o Prisma, que gera automaticamente as operações de CRUD (Create, Read, Update, Delete) para as entidades do banco de dados.
 
-- **Controllers**: Contêm a lógica de negócios e manipulam as requisições HTTP. Cada controller é responsável por uma entidade específica, como `UserController`, `LikeController`, `AuthController`, e `TagController`. Eles processam as requisições, interagem com os modelos e retornam as respostas apropriadas.
+- **Controllers**: Contêm a lógica de negócios e manipulam as requisições HTTP. Cada controller é responsável por uma entidade específica. Eles processam as requisições, interagem com os modelos e retornam as respostas apropriadas.
 
 - **Routes**: Definem as rotas da API, mapeando as URLs para os métodos dos controllers. As rotas são organizadas em um único arquivo (`routes.ts`), facilitando a manutenção e a adição de novas funcionalidades.
 
@@ -74,4 +74,4 @@ Para executar o projeto na sua máquina local, siga os passos abaixo:
 
 ## FrontEnd
 
-Lembre-se de utilizar o mesmo token no back e frontEnd. Segue o repositório da interface mobile que demonstra o funcionamento do sistema: https://github.com/MatheusRicardoCarvalho/pi-mobile
+Segue o repositório da interface mobile que demonstra o funcionamento do sistema: https://github.com/MatheusRicardoCarvalho/pi-mobile
