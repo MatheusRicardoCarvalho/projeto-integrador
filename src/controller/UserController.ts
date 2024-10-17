@@ -322,7 +322,6 @@ export class UserController {
         try {
             const { userId1, userId2 } = req.body;
 
-            // Encontre o chat onde ambos os usuários participam
             const chat = await prisma.chat.findFirst({
                 where: {
                     users: {
@@ -342,7 +341,6 @@ export class UserController {
                 return res.status(404).json({ error: "Chat não encontrado" });
             }
 
-            // Retorne o ID do chat
             return res.status(200).json({ chat });
         } catch (err) {
             return res.status(500).json({ error: "Erro ao buscar ID do chat" });
@@ -369,19 +367,16 @@ export class UserController {
                 return res.status(404).json({ error: "Usuário(s) não encontrado(s)" });
             }
     
-            // Verifica se os usuários se curtiram
             const matchedUsers = users.filter(user => {
                 const likedByUserIds = user.likedBy.map(like => like.likerId);
                 const userLikesIds = user.likes.map(like => like.likedUserId);
                 return likedByUserIds.some(id => userLikesIds.includes(id));
             });
     
-            // Se os usuários não se curtiram, retorne um erro
             if (matchedUsers.length !== users.length) {
                 return res.status(403).json({ error: "Usuários precisam se curtir para criar um chat" });
             }
     
-            // Cria o chat
             const chat = await prisma.chat.create({
                 data: {
                     users: {

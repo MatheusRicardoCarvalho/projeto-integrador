@@ -13,24 +13,6 @@ app.use(express.json())
 app.use(routes)
 
 const server = http.createServer(app);
-const io = new Server(server);
-
-//const chatRooms: Map<string, Socket[]> = new Map();
-
-io.on('connection', (socket: Socket) => {
-  
-    socket.on('joinRoom', (chatID: string) => {
-    socket.join(chatID);
-  });
-  
-  socket.on('leaveRoom', (chatID: string) => {
-    socket.leave(chatID);
-  });
-  
-  socket.on('message', (message: string, chatID: string) => {
-    io.to(chatID).emit('message', message); // Envia a mensagem para todos os sockets na sala
-  });
-});
 
 server.listen(porta, () => {
   console.log('Servidor escutando na porta 3333');

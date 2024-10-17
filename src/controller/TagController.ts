@@ -40,7 +40,6 @@ export class TagController {
         try {
             const allTags: { name: string; type: string }[] = [];
       
-          // Mapeia cada array de tags para adicionar o tipo correspondente
           estiloDeVidaTags.forEach(tag => allTags.push({ name: tag, type: 'Vida' }));
           higieneELimpezaTags.forEach(tag => allTags.push({ name: tag, type: 'Limpeza' }));
           privacidadeTags.forEach(tag => allTags.push({ name: tag, type: 'Privacidade' }));

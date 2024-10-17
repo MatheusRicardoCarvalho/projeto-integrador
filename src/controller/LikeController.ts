@@ -3,6 +3,13 @@ import { Request, Response } from "express";
 
 const prisma = new PrismaClient();
 
+const erros = {
+  erroAoBuscarLikes: "Ocorreu um erro ao buscar os likes.",
+  erroAoBuscarLike: "Ocorreu um erro ao buscar o like.",
+  erroAoCriarLike: "Ocorreu um erro ao criar o like.",
+  erroAoDeletarLike: "Ocorreu um erro ao deletar o like."
+};
+
 export class LikeController {
 
   async index(req: Request, res: Response) {
@@ -10,7 +17,7 @@ export class LikeController {
       const likes = await prisma.like.findMany();
       res.status(200).json(likes);
     } catch (error) {
-      res.status(500).json({ error: "An error occurred while fetching the likes." });
+      res.status(500).json({ error: erros.erroAoBuscarLikes });
     }
   }
 
@@ -25,14 +32,12 @@ export class LikeController {
           },
         },
       });
-      res.status(200).json({like});
+      res.status(200).json({ like });
     } catch (error) {
-      res.status(500).json({ error: "An error occurred while fetching the like." });
+      res.status(500).json({ error: erros.erroAoBuscarLike });
     }
   }
   
-
-  // Função para registrar um like de um usuário para outro
   async store(req: Request, res: Response) {
     const { likerId, likedUserId } = req.body;
     try {
@@ -42,13 +47,12 @@ export class LikeController {
           likedUserId: likedUserId,
         },
       });
-      res.status(200).json({like});
+      res.status(200).json({ like });
     } catch (error) {
-      res.status(500).json({ error: "Houve o seguinte erro: " + error });
+      res.status(500).json({ error: erros.erroAoCriarLike + ": " + error });
     }
   }
 
-  // Função para deletar um like gerado anteriormente
   async delete(req: Request, res: Response) {
     const { likerId, likedUserId } = req.body;
     try {
@@ -62,11 +66,10 @@ export class LikeController {
       });
       res.status(200).json(like);
     } catch (error) {
-      res.status(500).json({ error: "An error occurred while deleting the like." });
+      res.status(500).json({ error: erros.erroAoDeletarLike });
     }
   }
 
-  // Função para retornar uma lista de todos os matches de like de um determinado usuário
   async match(req: Request, res: Response) {
     const { userId } = req.body;
     try {
@@ -90,7 +93,7 @@ export class LikeController {
 
       res.status(200).json(matches);
     } catch (error) {
-      res.status(500).json({ error: "An error occurred while fetching the matches." });
+      res.status(500).json({ error: "Ocorreu um erro ao buscar os matches." });
     }
   }
 
@@ -104,7 +107,7 @@ export class LikeController {
       });
       res.status(200).json({ qtdLikes: likes });
     } catch (error) {
-      res.status(500).json({ error: "An error occurred while counting the likes." });
+      res.status(500).json({ error: "Ocorreu um erro ao contar os likes." });
     }
   }
 }
